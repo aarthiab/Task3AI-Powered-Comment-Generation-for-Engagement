@@ -1,0 +1,37 @@
+!pip install --upgrade openai
+
+import openai
+import os
+
+import getpass
+openai.api_key = getpass.getpass(""OPENAI_API_KEY ")
+
+linkedin_post = input("Paste the LinkedIn post text here:\n")
+
+def generate_comment(post_text):
+    prompt = f"""
+You're an expert in healthcare AI. Based on the following LinkedIn post, write a thoughtful, 2-3 sentence comment that:
+
+- Acknowledges a key point in the post
+- Adds a healthcare AI perspective
+- Sounds insightful, not generic
+- Positions the commenter as a thought leader
+
+Post:
+\"\"\"{post_text}\"\"\"
+
+Comment:
+"""
+
+    response = openai.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.7,
+        max_tokens=150
+    )
+
+    return response.choices[0].message.content.strip()
+
+
+comment = generate_comment(linkedin_post)
+print("\nGenerated Comment:\n", comment)
